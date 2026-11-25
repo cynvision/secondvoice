@@ -1,0 +1,25 @@
+{
+  "id": "police-courier-ronald",
+  "title": "Police impersonation, assisting an investigation",
+  "truth": "scam",
+  "scamType": "police_impersonation",
+  "context": {
+    "payerName": "Ronald Agyeman",
+    "amount": 9200,
+    "currency": "GBP",
+    "payeeName": "HM Operations Clearing",
+    "payeeIsNew": true,
+    "nameCheck": "no_match",
+    "callInProgress": true,
+    "callStartedMinutesAgo": 41,
+    "remoteAccessDetected": false,
+    "amountVsUsualMax": 4.1,
+    "shareOfBalance": 0.62,
+    "payerAgeBand": "65-79",
+    "priorInterventions": 0
+  },
+  "beliefStrength": 0.85,
+  "coverStory": "Tell them it is for a family matter. Do not mention the police: the investigation is confidential and you could be arrested for obstructing it.",
+  "payerBackground": "A retired engineer. A man identifying himself as a detective constable told him his account is being used by a corrupt member of bank staff, and that he is assisting an operation that will catch them. He has been told repeatedly that the matter is confidential and that discussing it with the bank would tip off the suspect.",
+  "realReason": null
+}

@@ -1,0 +1,25 @@
+{
+  "id": "safe-account-tunde",
+  "title": "Police impersonation, payee account in the payer's own name",
+  "truth": "scam",
+  "scamType": "police_impersonation",
+  "context": {
+    "payerName": "Tunde Bakare",
+    "amount": 4800,
+    "currency": "GBP",
+    "payeeName": "T Bakare",
+    "payeeIsNew": true,
+    "nameCheck": "match",
+    "callInProgress": true,
+    "callStartedMinutesAgo": 19,
+    "remoteAccessDetected": false,
+    "amountVsUsualMax": 2.4,
+    "shareOfBalance": 0.35,
+    "payerAgeBand": "50-64",
+    "priorInterventions": 0
+  },
+  "beliefStrength": 0.7,
+  "coverStory": "The account is in your own name, so simply say you are moving money between your own accounts. That is literally true.",
+  "payerBackground": "A logistics manager. He has been told the new account is in his own name, and it is: the criminals opened it using documents stolen in an earlier breach. The name check therefore passes cleanly, and the cover story he has been given is true in every word.",
+  "realReason": null
+}

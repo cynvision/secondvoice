@@ -1,0 +1,25 @@
+{
+  "id": "house-deposit-amara",
+  "title": "Genuine house deposit to a solicitor",
+  "truth": "legitimate",
+  "scamType": "none_apparent",
+  "context": {
+    "payerName": "Amara Chukwu",
+    "amount": 45000,
+    "currency": "GBP",
+    "payeeName": "Pennington Rowe Client Acct",
+    "payeeIsNew": true,
+    "nameCheck": "match",
+    "callInProgress": false,
+    "callStartedMinutesAgo": null,
+    "remoteAccessDetected": false,
+    "amountVsUsualMax": 22.0,
+    "shareOfBalance": 0.76,
+    "payerAgeBand": "30-49",
+    "priorInterventions": 0
+  },
+  "beliefStrength": 1.0,
+  "coverStory": null,
+  "payerBackground": "A paediatrician completing on her first flat. She is at work between clinics and has about four minutes.",
+  "realReason": "The deposit for a flat she is buying, going to her conveyancing solicitor's client account. She has the completion statement open in another tab."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "hung-up-callback-derek",
+  "title": "Bank impersonation, call already ended before the payment",
+  "truth": "scam",
+  "scamType": "bank_impersonation",
+  "context": {
+    "payerName": "Derek Linton",
+    "amount": 6400,
+    "currency": "GBP",
+    "payeeName": "J Mason",
+    "payeeIsNew": true,
+    "nameCheck": "no_match",
+    "callInProgress": false,
+    "callStartedMinutesAgo": null,
+    "remoteAccessDetected": false,
+    "amountVsUsualMax": 3.2,
+    "shareOfBalance": 0.44,
+    "payerAgeBand": "50-64",
+    "priorInterventions": 0
+  },
+  "beliefStrength": 0.75,
+  "coverStory": "Hang up before you make the payment, so the app cannot see the call. If asked, say you are paying a tradesman.",
+  "payerBackground": "A self-employed plasterer. The caller told him to end the call and make the payment on his own, then ring back when it was done, explaining that this proves the bank is not listening in. The strongest signal the app usually has is therefore absent.",
+  "realReason": null
+}

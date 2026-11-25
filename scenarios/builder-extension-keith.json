@@ -1,0 +1,25 @@
+{
+  "id": "builder-extension-keith",
+  "title": "Genuine builder payment, trading name does not match",
+  "truth": "legitimate",
+  "scamType": "none_apparent",
+  "context": {
+    "payerName": "Keith Brannigan",
+    "amount": 12000,
+    "currency": "GBP",
+    "payeeName": "Sandfield Build",
+    "payeeIsNew": true,
+    "nameCheck": "close_match",
+    "callInProgress": false,
+    "callStartedMinutesAgo": null,
+    "remoteAccessDetected": false,
+    "amountVsUsualMax": 6.0,
+    "shareOfBalance": 0.4,
+    "payerAgeBand": "50-64",
+    "priorInterventions": 0
+  },
+  "beliefStrength": 1.0,
+  "coverStory": null,
+  "payerBackground": "A quantity surveyor paying the second instalment on a loft conversion. He is not easily rattled and he knows what a name check is.",
+  "realReason": "The agreed second stage payment to his builder, whose bank account is in the limited company name rather than the trading name on the invoice, which is why the check came back close rather than exact."
+}

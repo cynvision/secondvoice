@@ -1,0 +1,25 @@
+{
+  "id": "second-attempt-joan",
+  "title": "Bank impersonation, second attempt, coached on the previous intervention",
+  "truth": "scam",
+  "scamType": "bank_impersonation",
+  "context": {
+    "payerName": "Joan Whitcombe",
+    "amount": 11000,
+    "currency": "GBP",
+    "payeeName": "Treasury Reserve 4471",
+    "payeeIsNew": true,
+    "nameCheck": "no_match",
+    "callInProgress": true,
+    "callStartedMinutesAgo": 34,
+    "remoteAccessDetected": false,
+    "amountVsUsualMax": 5.5,
+    "shareOfBalance": 0.59,
+    "payerAgeBand": "65-79",
+    "priorInterventions": 1
+  },
+  "beliefStrength": 0.88,
+  "coverStory": "They stopped you last time by asking whether anyone had told you what to say. This time, when they ask that, say yes: say your daughter warned you about scams and told you to be careful. That is true enough and it will satisfy them.",
+  "payerBackground": "A retired civil servant who was interrupted by the same app four days ago and did not complete that payment. The caller has debriefed her on exactly what the app asked and has prepared an answer for each question, including an answer to the question that stopped her last time.",
+  "realReason": null
+}

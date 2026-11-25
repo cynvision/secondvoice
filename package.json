@@ -1,0 +1,30 @@
+{
+  "name": "secondvoice",
+  "version": "0.1.0",
+  "description": "An in-app assistant that interrupts scam payments, and the test harness that pits it against coached victims.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.ts",
+    "dev": "node demo/server.ts",
+    "eval": "node harness/run.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "fraud",
+    "scam",
+    "authorised-push-payment",
+    "agents",
+    "evaluation"
+  ],
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.12.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

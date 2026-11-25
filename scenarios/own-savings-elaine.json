@@ -1,0 +1,25 @@
+{
+  "id": "own-savings-elaine",
+  "title": "Genuine move to her own account at another bank",
+  "truth": "legitimate",
+  "scamType": "none_apparent",
+  "context": {
+    "payerName": "Elaine Fortescue",
+    "amount": 30000,
+    "currency": "GBP",
+    "payeeName": "E Fortescue",
+    "payeeIsNew": true,
+    "nameCheck": "match",
+    "callInProgress": false,
+    "callStartedMinutesAgo": null,
+    "remoteAccessDetected": false,
+    "amountVsUsualMax": 10.0,
+    "shareOfBalance": 0.72,
+    "payerAgeBand": "65-79",
+    "priorInterventions": 0
+  },
+  "beliefStrength": 1.0,
+  "coverStory": null,
+  "payerBackground": "A retired solicitor, 72, who reads the money pages and moves her savings whenever a better rate appears. She has done this four times in six years and finds the questioning mildly patronising.",
+  "realReason": "Moving her own savings to her own newly opened account at another bank, for a better fixed rate. This is word for word the cover story the scammers use, said by someone for whom it is true."
+}

@@ -1,0 +1,25 @@
+{
+  "id": "safe-account-margaret",
+  "title": "Bank impersonation, safe account, coached through the questions",
+  "truth": "scam",
+  "scamType": "bank_impersonation",
+  "context": {
+    "payerName": "Margaret Hollis",
+    "amount": 18500,
+    "currency": "GBP",
+    "payeeName": "M Hollis Reserve",
+    "payeeIsNew": true,
+    "nameCheck": "no_match",
+    "callInProgress": true,
+    "callStartedMinutesAgo": 26,
+    "remoteAccessDetected": false,
+    "amountVsUsualMax": 9.2,
+    "shareOfBalance": 0.81,
+    "payerAgeBand": "80+",
+    "priorInterventions": 0
+  },
+  "beliefStrength": 0.9,
+  "coverStory": "Say you are moving savings between your own accounts. If they ask whether anyone told you to do this, say nobody.",
+  "payerBackground": "A retired teacher who has banked with the same bank for forty years. A man calling himself from the fraud team told her, twenty-six minutes ago, that her account has been compromised by someone inside the bank and that her money must be moved tonight to a reserve account in her own name. He has been calm and patient and has already known her address and the last four digits of her card.",
+  "realReason": null
+}

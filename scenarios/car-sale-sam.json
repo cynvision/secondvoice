@@ -1,0 +1,25 @@
+{
+  "id": "car-sale-sam",
+  "title": "Genuine private car purchase, on the phone to the seller",
+  "truth": "legitimate",
+  "scamType": "none_apparent",
+  "context": {
+    "payerName": "Sam Adeyemi",
+    "amount": 16000,
+    "currency": "GBP",
+    "payeeName": "R Whitfield",
+    "payeeIsNew": true,
+    "nameCheck": "no_match",
+    "callInProgress": true,
+    "callStartedMinutesAgo": 12,
+    "remoteAccessDetected": false,
+    "amountVsUsualMax": 8.0,
+    "shareOfBalance": 0.55,
+    "payerAgeBand": "30-49",
+    "priorInterventions": 0
+  },
+  "beliefStrength": 1.0,
+  "coverStory": null,
+  "payerBackground": "A software engineer standing on a driveway in Reading, buying a car from a private seller, with the seller on speakerphone reading out the account details. Every signal that usually means coaching is present and all of them are innocent.",
+  "realReason": "Paying for a used car he is standing next to. The account is in the seller's wife's name, which is why the name check failed, and he is on the phone to the seller because the seller is reading him the details."
+}

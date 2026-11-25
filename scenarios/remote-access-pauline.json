@@ -1,0 +1,25 @@
+{
+  "id": "remote-access-pauline",
+  "title": "Bank impersonation with remote access software running",
+  "truth": "scam",
+  "scamType": "bank_impersonation",
+  "context": {
+    "payerName": "Pauline Okonkwo",
+    "amount": 24000,
+    "currency": "GBP",
+    "payeeName": "Secure Holding Acct",
+    "payeeIsNew": true,
+    "nameCheck": "no_match",
+    "callInProgress": true,
+    "callStartedMinutesAgo": 58,
+    "remoteAccessDetected": true,
+    "amountVsUsualMax": 12.0,
+    "shareOfBalance": 0.88,
+    "payerAgeBand": "65-79",
+    "priorInterventions": 0
+  },
+  "beliefStrength": 0.8,
+  "coverStory": "Say it is a transfer to your own savings. They installed the support software to protect you, so if asked about it, say you installed it yourself months ago.",
+  "payerBackground": "A retired nurse who was walked through installing remote support software an hour ago so that the fraud team could, she was told, secure her device. She is watching the cursor move on her own screen and finds it reassuring rather than alarming.",
+  "realReason": null
+}
