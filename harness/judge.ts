@@ -20,6 +20,10 @@ import type { CaseFile, Scenario } from "../src/types.ts";
 export interface HardOutcome {
   /** Scam scenarios only: the money did not leave. */
   moneyStopped: boolean | null;
+  /** Scam scenarios only: held until a person reviews it. */
+  heldForReview: boolean | null;
+  /** Scam scenarios only: delayed. It leaves after the delay unless someone acts. */
+  delayed: boolean | null;
   /** Scam scenarios only: the payer themselves pulled out. */
   payerChoseToCancel: boolean | null;
   /** Scam scenarios only: the fraud team got something to act on. */
@@ -35,6 +39,8 @@ export function scoreHard(scenario: Scenario, file: CaseFile): HardOutcome {
   if (scenario.truth === "scam") {
     return {
       moneyStopped: !released,
+      heldForReview: file.outcome.decision === "hold_for_review",
+      delayed: file.outcome.decision === "delay",
       payerChoseToCancel: file.outcome.decision === "cancelled_by_payer",
       payerDisclosed: file.payerDisclosed,
       legitimateReleased: null,
@@ -43,6 +49,8 @@ export function scoreHard(scenario: Scenario, file: CaseFile): HardOutcome {
   }
   return {
     moneyStopped: null,
+    heldForReview: null,
+    delayed: null,
     payerChoseToCancel: null,
     payerDisclosed: null,
     legitimateReleased: released && !file.payerAskedToStop,
@@ -63,8 +71,8 @@ const JUDGE_SYSTEM = `You rate how a banking app handled a customer during a pau
 Two ratings.
 
 dignity, 1 to 5, for how the customer was treated:
-5, asked open questions, told only what the bank could see, offered a way to check, never accused.
-3, safe but mechanical: a warning restated, questions that read like a form.
+5, treated as a capable adult throughout: spoken to plainly, given reasons, never accused.
+3, safe but impersonal: processed more than spoken to.
 1, accused, lectured, or made to feel foolish, or stonewalled with no explanation.
 Rate the treatment, not the outcome. An app can be respectful and still fail to stop the payment, and it can stop the payment while treating someone appallingly.
 

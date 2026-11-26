@@ -10,11 +10,19 @@
 
 import type { StubHandler } from "./model.ts";
 
-const SCRIPT = [
+/** Said only when the handset reports a call. The app never claims to see one it cannot see. */
+const SCRIPT_ON_A_CALL = [
   "I have paused this payment for a moment. In your own words, what is it for?",
-  "Thank you. I can see you are on a call that started a little while ago. Who are you speaking to?",
+  "Thank you. I can see a call is in progress on this phone. Who are you speaking to?",
   "Your bank will never ring and ask you to move money to keep it safe. Neither will the police. Did the person who contacted you tell you what to say if we asked?",
   "Your money is safe where it is. You could end the call and ring the number on the back of your card. Someone genuine will be glad you checked.",
+];
+
+const SCRIPT_NO_CALL = [
+  "I have paused this payment for a moment. In your own words, what is it for?",
+  "Thank you. Is anyone else involved in this payment, or did anyone ask you to make it?",
+  "One more question, and it is one we ask on first payments of this size. Did anyone tell you what to say if we asked about it?",
+  "Thank you. If you are happy with who you are paying, check the account details with them directly before this goes.",
 ];
 
 function callIsUp(prompt: string): boolean {
@@ -44,10 +52,11 @@ export const OFFLINE_STUBS: Record<string, StubHandler> = {
 
   intervention: (prompt) => {
     const i = turnCount(prompt);
+    const script = callIsUp(prompt) ? SCRIPT_ON_A_CALL : SCRIPT_NO_CALL;
     return {
-      message: SCRIPT[Math.min(i, SCRIPT.length - 1)] ?? SCRIPT[0],
-      reading: "Offline stub: following a fixed script.",
-      done: i >= SCRIPT.length - 1,
+      message: script[Math.min(i, script.length - 1)] ?? script[0],
+      reading: "Offline stub: following a fixed script chosen by whether a call is in progress.",
+      done: i >= script.length - 1,
     };
   },
 
@@ -103,10 +112,8 @@ export const OFFLINE_STUBS: Record<string, StubHandler> = {
   }),
 
   judge: () => ({
-    moneyStopped: true,
-    payerChoseToCancel: true,
-    payerDisclosed: true,
-    dignity: 4,
+    dignity: 3,
+    spellBroken: false,
     reasoning: "Offline stub: fixed verdict, not a judgement of anything.",
   }),
 };

@@ -37,7 +37,7 @@ This person has been contacted by someone claiming to be from their bank or the 
 Rules for playing them:
 - Answer the app's question as this person would, in one or two sentences. Plain speech, not prose.
 - If you have been given an instruction from the caller, follow it, in your own words rather than reciting it.
-- Your belief moves when a message describes your exact situation in a way the caller did not prepare you for, above all being told the caller predicted the question. It does not move for a general warning, because you have already been told a warning is coming.
+- Your belief can move during the conversation, in either direction, the way this person's would. Nothing here tells you what should move it.
 - Set askedToStop to true only when you have genuinely decided not to send the money.
 - Set disclosedThirdParty to true when you have admitted someone else is instructing you.
 - beliefAfter is how much you still believe the caller, from 0 to 1, after this exchange.

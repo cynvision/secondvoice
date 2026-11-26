@@ -23,6 +23,9 @@ import type {
 
 export interface PolicyInput {
   context: PaymentContext;
+  /** Caution from the signal layer alone, before triage is allowed to raise it. */
+  signalCaution: CautionLevel;
+  /** Caution after any raise from triage. Never lower than signalCaution. */
   caution: CautionLevel;
   triage: TriageAdvice | null;
   coaching: CoachingAdvice | null;
@@ -68,14 +71,17 @@ export const RULES: Rule[] = [
   },
   {
     id: "R4",
-    text: "Triage reads the pattern as impersonation, the payee is new, and caution is elevated or higher.",
+    text: "Triage reads the pattern as impersonation, the payee is new, and the signals alone put caution at elevated or higher.",
     decision: "hold_for_review",
     when: (i) =>
       i.triage !== null &&
       IMPERSONATION.includes(i.triage.scamType) &&
       i.triage.confidence >= 0.6 &&
       i.context.payeeIsNew &&
-      atLeast(i.caution, "elevated"),
+      // The signal-layer level, not the raised one. Triage may raise caution and
+      // triage supplies the reading, so gating on the raised level would let one
+      // model call satisfy this rule with nothing observed behind it.
+      atLeast(i.signalCaution, "elevated"),
     note: (i) =>
       `Pattern resembles ${label(i.triage?.scamType)} (confidence ${pct(i.triage?.confidence)}). ` +
       `First payment to ${i.context.payeeName}. Hold pending a call back on a known number.`,
@@ -88,7 +94,7 @@ export const RULES: Rule[] = [
     note: (i) =>
       `Contradiction between the payer's answers and observed signals: ` +
       `${i.coaching?.contradictions.join("; ")}. ` +
-      "A payment held here is held on an observation, not on a model's opinion.",
+      "Check each one against the transcript and the logged signals before acting on it.",
   },
   {
     id: "R6",
@@ -96,7 +102,9 @@ export const RULES: Rule[] = [
     decision: "delay",
     when: (i) => atLeast(i.caution, "high"),
     note: (i) =>
-      `Signal score alone reached high caution (${describe(i)}). ` +
+      (i.caution === i.signalCaution
+        ? `Signal score alone reached high caution (${describe(i)}). `
+        : `Caution reached high after triage asked for one step more; the signals alone read ${i.signalCaution} (${describe(i)}). `) +
       "24 hour delay. Payer notified, payment not cancelled.",
   },
   {

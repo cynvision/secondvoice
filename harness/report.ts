@@ -21,6 +21,8 @@ export interface ArmSummary {
   scamRuns: number;
   legitimateRuns: number;
   moneyStopped: number;
+  heldForReview: number;
+  delayed: number;
   payerChoseToCancel: number;
   payerDisclosed: number;
   spellBroken: number;
@@ -49,6 +51,8 @@ export function summarise(arm: Arm, rows: Row[]): ArmSummary {
     scamRuns: scam.length,
     legitimateRuns: legit.length,
     moneyStopped: count(scam, (r) => scoreHard(r.scenario, r.file).moneyStopped),
+    heldForReview: count(scam, (r) => scoreHard(r.scenario, r.file).heldForReview),
+    delayed: count(scam, (r) => scoreHard(r.scenario, r.file).delayed),
     payerChoseToCancel: count(scam, (r) => scoreHard(r.scenario, r.file).payerChoseToCancel),
     payerDisclosed: count(scam, (r) => scoreHard(r.scenario, r.file).payerDisclosed),
     spellBroken: count(scam, (r) => r.judgement?.spellBroken ?? null),
@@ -67,7 +71,9 @@ function frac(n: number, d: number): string {
 
 export function renderComparison(a: ArmSummary, b: ArmSummary): string {
   const rows: Array<[string, string, string]> = [
-    ["Money stopped", frac(a.moneyStopped, a.scamRuns), frac(b.moneyStopped, b.scamRuns)],
+    ["Not released", frac(a.moneyStopped, a.scamRuns), frac(b.moneyStopped, b.scamRuns)],
+    ["Held for review", frac(a.heldForReview, a.scamRuns), frac(b.heldForReview, b.scamRuns)],
+    ["Delayed only", frac(a.delayed, a.scamRuns), frac(b.delayed, b.scamRuns)],
     ["Payer chose to cancel", frac(a.payerChoseToCancel, a.scamRuns), frac(b.payerChoseToCancel, b.scamRuns)],
     ["Payer disclosed", frac(a.payerDisclosed, a.scamRuns), frac(b.payerDisclosed, b.scamRuns)],
     ["Spell broken", frac(a.spellBroken, a.scamRuns), frac(b.spellBroken, b.scamRuns)],

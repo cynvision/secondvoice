@@ -60,6 +60,7 @@ export async function runCase(options: RunOptions): Promise<CaseFile> {
 
     const outcome = decide({
       context,
+      signalCaution: signals.level,
       caution: signals.level,
       triage: null,
       coaching: null,
@@ -106,6 +107,7 @@ export async function runCase(options: RunOptions): Promise<CaseFile> {
   // ── Stage 5 ──
   const outcome = decide({
     context,
+    signalCaution: signals.level,
     caution: finalCaution,
     triage,
     coaching,

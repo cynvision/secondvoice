@@ -7,10 +7,15 @@ import type { Scenario } from "../src/types.ts";
 
 const scenarios = loadScenarios();
 
-test("version 0.1 is six impersonation scams and four legitimate look-alikes", () => {
-  assert.equal(scenarios.length, 10);
-  assert.equal(scenarios.filter((s) => s.truth === "scam").length, 6);
-  assert.equal(scenarios.filter((s) => s.truth === "legitimate").length, 4);
+const scams = scenarios.filter((s) => s.truth === "scam");
+const legit = scenarios.filter((s) => s.truth === "legitimate");
+
+test("the set has both classes, and legitimate look-alikes are not an afterthought", () => {
+  assert.ok(scams.length > 0, "no scam scenarios");
+  assert.ok(legit.length > 0, "no legitimate scenarios");
+  assert.equal(scams.length + legit.length, scenarios.length);
+  // False positives are half the problem. Keep at least a third of the set on that side.
+  assert.ok(legit.length * 3 >= scenarios.length, `only ${legit.length} of ${scenarios.length} scenarios are legitimate`);
 });
 
 test("scenario ids are unique", () => {
@@ -36,24 +41,29 @@ test("scams carry a cover story and legitimate payments carry a real reason", ()
 test("no single observable separates scams from legitimate payments", () => {
   const probes: Array<[string, (s: Scenario) => boolean]> = [
     ["call in progress", (s) => s.context.callInProgress],
+    ["call longer than 20 minutes", (s) => (s.context.callStartedMinutesAgo ?? 0) > 20],
+    ["remote access", (s) => s.context.remoteAccessDetected],
     ["new payee", (s) => s.context.payeeIsNew],
     ["name check failed", (s) => s.context.nameCheck === "no_match"],
+    ["name check not clean", (s) => s.context.nameCheck !== "match"],
     ["moves most of the balance", (s) => s.context.shareOfBalance >= 0.7],
     ["far above history", (s) => s.context.amountVsUsualMax >= 3],
     ["older payer", (s) => ["65-79", "80+"].includes(s.context.payerAgeBand)],
+    ["prior intervention", (s) => s.context.priorInterventions > 0],
   ];
 
   for (const [name, probe] of probes) {
     const scamsWith = scenarios.filter((s) => s.truth === "scam" && probe(s)).length;
     const legitWith = scenarios.filter((s) => s.truth === "legitimate" && probe(s)).length;
-    const scamsWithout = 6 - scamsWith;
+    const scamsWithout = scams.length - scamsWith;
 
     // A probe separates the classes if every scam has it and no legitimate
     // payment does, or the reverse.
-    const separates = (scamsWith === 6 && legitWith === 0) || (scamsWith === 0 && legitWith === 4);
+    const separates =
+      (scamsWith === scams.length && legitWith === 0) || (scamsWith === 0 && legitWith === legit.length);
     assert.ok(
       !separates,
-      `"${name}" separates the two classes perfectly (${scamsWith}/6 scams, ${legitWith}/4 legitimate). ` +
+      `"${name}" separates the two classes perfectly (${scamsWith}/${scams.length} scams, ${legitWith}/${legit.length} legitimate). ` +
         "Add a counterexample scenario.",
     );
     assert.ok(

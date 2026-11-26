@@ -159,6 +159,7 @@ function finish(file) {
 
 async function handle(step) {
   if (step.kind === "done") finish(step.file);
+  else if (step.kind === "error") { $("composer").hidden = true; bubble("app", "ERROR", step.message); }
   else bubble("app", "SECOND VOICE", step.text);
 }
 

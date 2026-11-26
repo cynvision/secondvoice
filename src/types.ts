@@ -2,8 +2,10 @@
  * The shapes that cross stage boundaries.
  *
  * One rule governs this file: anything a model produces is advice, and carries
- * no authority of its own. The only type that can end a payment is PolicyOutcome,
- * and the only thing that writes one is the rule table in policy.ts.
+ * no authority of its own. A payment ends with a PolicyOutcome, and by
+ * convention the only thing that writes one is the rule table in policy.ts.
+ * TypeScript does not enforce that (it is a plain interface), so a test does:
+ * test/engine.test.ts checks that nothing outside policy.ts constructs one.
  */
 
 export type ScamType =
@@ -25,7 +27,7 @@ export interface PaymentContext {
   payeeIsNew: boolean;
   /** Confirmation of Payee. */
   nameCheck: "match" | "close_match" | "no_match" | "unavailable";
-  /** The handset knows whether a call is up. This is the signal scammers cannot hide. */
+  /** The handset knows whether a call is up. A strong signal when present. A caller defeats it by having the victim hang up first, which is one of the scenarios. */
   callInProgress: boolean;
   callStartedMinutesAgo: number | null;
   remoteAccessDetected: boolean;

@@ -46,7 +46,11 @@ function channel<T>() {
   };
 }
 
-type FromEngine = { kind: "message"; text: string } | { kind: "done"; file: CaseFile };
+type FromEngine =
+  | { kind: "message"; text: string }
+  | { kind: "done"; file: CaseFile }
+  /** The engine failed. No decision was made, and none is invented here. */
+  | { kind: "error"; message: string };
 
 interface Session {
   toPayer: ReturnType<typeof channel<FromEngine>>;
@@ -124,9 +128,10 @@ const server = createServer(async (req, res) => {
       })
         .then((file) => session.toPayer.push({ kind: "done", file }))
         .catch((error: unknown) => {
+          console.error(error);
           session.toPayer.push({
-            kind: "done",
-            file: { outcome: { decision: "hold_for_review", ruleId: "ERR", ruleText: String(error), caseNote: "" } } as CaseFile,
+            kind: "error",
+            message: "Something went wrong and no decision was made. In a bank this would fall back to the signal-only rules.",
           });
         });
 
@@ -145,7 +150,7 @@ const server = createServer(async (req, res) => {
         disclosedThirdParty: false,
       });
       const next = await session.toPayer.take();
-      if (next.kind === "done") sessions.delete(String(body["sessionId"]));
+      if (next.kind !== "message") sessions.delete(String(body["sessionId"]));
       return json(res, 200, next);
     }
 
@@ -156,7 +161,7 @@ const server = createServer(async (req, res) => {
   }
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, "127.0.0.1", () => {
   console.log(`Fernhill demo bank on http://localhost:${PORT}`);
   console.log(
     hasKey

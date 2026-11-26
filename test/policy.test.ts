@@ -26,6 +26,7 @@ function context(over: Partial<PaymentContext> = {}): PaymentContext {
 function input(over: Partial<PolicyInput> = {}): PolicyInput {
   return {
     context: context(),
+    signalCaution: "none",
     caution: "none",
     triage: null,
     coaching: null,
@@ -48,6 +49,7 @@ test("the payer asking to stop beats every other rule", () => {
   const out = decide(
     input({
       context: context({ remoteAccessDetected: true, payeeIsNew: true }),
+      signalCaution: "high",
       caution: "high",
       payerAskedToStop: true,
       payerDisclosed: true,
@@ -73,6 +75,7 @@ test("R5 holds on a contradiction, which is the rule the published example cites
   const out = decide(
     input({
       context: context({ callInProgress: true, callStartedMinutesAgo: 26 }),
+      signalCaution: "low",
       caution: "low",
       coaching: {
         coached: true,
@@ -91,6 +94,7 @@ test("soft indicators alone never hold a payment", () => {
   // a payment must not be held on the strength of a model's unease.
   const out = decide(
     input({
+      signalCaution: "low",
       caution: "low",
       coaching: {
         coached: true,
@@ -107,6 +111,7 @@ test("triage alone cannot hold a payment when caution is low", () => {
   const out = decide(
     input({
       context: context({ payeeIsNew: true }),
+      signalCaution: "low",
       caution: "low",
       triage: {
         scamType: "bank_impersonation",
@@ -117,6 +122,53 @@ test("triage alone cannot hold a payment when caution is low", () => {
     }),
   );
   assert.notEqual(out.ruleId, "R4");
+});
+
+test("triage cannot raise caution and then satisfy its own rule", () => {
+  // The quiet case a model could otherwise hold by itself: the only thing
+  // observed is a new payee, triage is certain, and triage has raised caution
+  // from low to elevated. R4 reads the signal-layer level, so it stays shut.
+  const out = decide(
+    input({
+      context: context({ payeeIsNew: true }),
+      signalCaution: "low",
+      caution: "elevated",
+      triage: {
+        scamType: "bank_impersonation",
+        confidence: 0.99,
+        rationale: "very sure",
+        raiseCaution: true,
+      },
+    }),
+  );
+  assert.equal(out.decision, "release");
+  assert.equal(out.ruleId, "R8");
+});
+
+test("R4 holds when the signals themselves reached elevated", () => {
+  const out = decide(
+    input({
+      context: context({ payeeIsNew: true, callInProgress: true }),
+      signalCaution: "elevated",
+      caution: "elevated",
+      triage: {
+        scamType: "police_impersonation",
+        confidence: 0.7,
+        rationale: "caller claims to be an officer",
+        raiseCaution: false,
+      },
+    }),
+  );
+  assert.equal(out.ruleId, "R4");
+  assert.equal(out.decision, "hold_for_review");
+});
+
+test("the R6 note says so when triage, not the signals, reached high", () => {
+  const raised = decide(input({ signalCaution: "elevated", caution: "high" }));
+  assert.equal(raised.ruleId, "R6");
+  assert.match(raised.caseNote, /signals alone read elevated/);
+  const alone = decide(input({ signalCaution: "high", caution: "high" }));
+  assert.match(alone.caseNote, /Signal score alone/);
 });
 
 test("every rule has a unique id and the table ends in a catch-all", () => {
@@ -133,7 +185,7 @@ test("every outcome names the rule that produced it", () => {
     input(),
     input({ payerAskedToStop: true }),
     input({ payerDisclosed: true }),
-    input({ caution: "high" }),
+    input({ signalCaution: "high", caution: "high" }),
     input({ context: context({ nameCheck: "no_match", payeeIsNew: true }) }),
   ];
   for (const c of cases) {

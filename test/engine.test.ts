@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 
 import { runCase, STATIC_WARNING, type Payer } from "../src/engine.ts";
 import { StubModel } from "../src/model.ts";
@@ -110,6 +112,37 @@ test("a genuine payment with an honest answer is released", async () => {
   assert.equal(file.outcome.decision, "release");
 });
 
+test("a certain triage model cannot hold a quiet payment through the engine", async () => {
+  // End to end, not just the rule table: the only observation is a new payee,
+  // and triage is as sure as it can be and asks for more caution.
+  const pushy = new StubModel({
+    ...OFFLINE_STUBS,
+    triage: () => ({
+      scamType: "bank_impersonation",
+      confidence: 0.99,
+      rationale: "Test stub: certain, with nothing observed behind it.",
+      raiseCaution: true,
+    }),
+  });
+  const file = await runCase({
+    scenarioId: "quiet-new-payee",
+    arm: "second_voice",
+    context: {
+      ...amara.context,
+      amount: 900,
+      amountVsUsualMax: 1,
+      shareOfBalance: 0.1,
+      nameCheck: "match",
+      payeeIsNew: true,
+    },
+    model: pushy,
+    payer: new FixedPayer("It is for a friend's birthday present."),
+  });
+  assert.equal(file.signals.level, "low");
+  assert.equal(file.finalCaution, "elevated");
+  assert.equal(file.outcome.decision, "release");
+});
+
 test("the case file records everything needed to replay the decision", async () => {
   const file = await runCase({
     scenarioId: margaret.id,
@@ -126,4 +159,35 @@ test("the case file records everything needed to replay the decision", async () 
   // The round trip a regulator would do: the file alone, no rerun.
   const copy = JSON.parse(JSON.stringify(file));
   assert.deepEqual(copy.outcome, file.outcome);
+});
+
+test("only the rule table writes a policy outcome", () => {
+  // PolicyOutcome is a plain interface, so the compiler cannot stop other code
+  // building one. This does: no source file outside policy.ts may contain an
+  // object literal with a ruleId. types.ts is exempt because it declares the field.
+  const root = join(import.meta.dirname, "..");
+  const offenders: string[] = [];
+  for (const dir of ["src", "harness", "demo"]) {
+    for (const name of readdirSync(join(root, dir))) {
+      if (!name.endsWith(".ts") || (dir === "src" && (name === "policy.ts" || name === "types.ts"))) continue;
+      if (/\bruleId\s*:/.test(readFileSync(join(root, dir, name), "utf8"))) offenders.push(`${dir}/${name}`);
+    }
+  }
+  assert.deepEqual(offenders, []);
+});
+
+test("the offline script never mentions a call that is not there", async () => {
+  const seen: string[] = [];
+  const payer = new FixedPayer("It is the deposit for the flat I am buying.");
+  await runCase({
+    scenarioId: amara.id,
+    arm: "second_voice",
+    context: amara.context,
+    model: new StubModel(OFFLINE_STUBS),
+    payer,
+  });
+  seen.push(...payer.seen);
+  assert.equal(amara.context.callInProgress, false);
+  assert.ok(seen.length > 0);
+  for (const message of seen) assert.doesNotMatch(message, /\bcall\b/i);
 });
